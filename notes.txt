@@ -1,0 +1,26 @@
+Bruun FFT references
+====================
+
+Bruun 1978 ("z-transform DFT filters and FFT's")
+------------------------------------------------
+- Describes discrete Fourier transform filter banks that minimize the number of multipliers.
+- Introduces FFT forms that use only real coefficients for real signals.
+- Claims new FFT algorithms require roughly half the real multiplications of the classical FFT.
+
+CS1 Intro to FFT
+----------------
+- Brief survey of FFT variations.
+- Presents Bruun's method as a polynomial reduction approach where X_k is obtained via x(z) mod (z - w_N^k).
+- Notes the algorithm is fast but less accurate than Cooley--Tukey and rarely used in practice.
+
+Algorithmic Views of Vectorized Polynomial Multipliers – NTRU Prime (2023)
+--------------------------------------------------------------------------
+- Explores vectorized polynomial multiplication for lattice-based cryptography.
+- Uses Good–Thomas, Rader's and Bruun FFTs to avoid coefficient doubling when q-1 has limited powers of two.
+- Demonstrates significant performance gains on sntrup761 parameters.
+
+Chen & Sorensen 1992
+--------------------
+- Proposes efficient FFT for real-symmetric data based on Bruun's algorithm.
+- Almost all twiddle factors are real except for the last stage.
+- Highlights simple data flow and good match with DSP architectures.
