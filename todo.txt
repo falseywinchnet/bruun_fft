@@ -1,0 +1,6 @@
+# TODO
+- [ ] Summarize conclusions from repository PDFs.
+- [ ] Implement Bruun FFT in Python with numpy.
+- [ ] Compare results with `numpy.fft`.
+- [ ] Implement inverse Bruun FFT.
+- [ ] Add tests validating forward and inverse transforms.
