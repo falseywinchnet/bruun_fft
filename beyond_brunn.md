@@ -268,6 +268,9 @@ real input
 
 All happens in realspace. none happens in complex space.
 
+
+My intention beyond this point is to develop an optimal FFT using an optimal CRT -see the conversation traces ChatGPT-Model Intelligence in DSP.md
+
 ## 14. Bruun in One Sentence
 
 A forgotten FFT approach that was a mere curiosity to a handful of mathematicians was rebuilt as a CRT transform, given an exact inverse, re-indexed through one coefficient ladder, moved into a normalized local-complex basis, reorganized around cache and output policy, and brought into direct competition with FFTW in a single-file implementation.
