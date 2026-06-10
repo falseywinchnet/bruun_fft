@@ -711,6 +711,53 @@ So the next transform is not “better Bruun.” It is:
 MT-CRT + trace-orthonormal local bases
 ```
 
+
+The important distinction is this: we cannot turn Bruun into MT-CRT by just changing IDX or output order. Bruun’s speed comes from a very special sparse factor tree: binomials and trinomials. The minimized-transport CRT tree has a different factorization. Its splits are frequency-band splits, not Bruun’s half-angle trinomial splits.
+
+So the current Bruun code gives us the harness, allocation model, validation, FFTW comparison, SIMD wrappers, and timing shell. But the actual forward/inverse kernels are mostly new.
+
+The effort breaks down like this.
+
+For a correctness prototype, one evening. Build the MT-CRT tree, form the real CRT factors, generate dense split/merge matrices, and run N=8,16,32,64,128,256,512. This would answer: does the transform invert, is it orthogonal after trace normalization, does it produce standard RFFT bins after conversion? It will not be fast, but it will prove the system.
+
+For a first C++ benchmark, maybe one to three days. Put TransportRFFT beside BruunRFFT in the same one-file harness. Reuse the same public API:
+
+TransportRFFT plan(N);
+plan.forward(x, X, work);
+plan.inverse(X, y);
+
+but internally use generated node matrices/codelets for the MT-CRT tree. This can be allocation-free during execution and benchmarked against FFTW, but the first version will probably be slower than Bruun because dense local split matrices are expensive.
+
+For a competitive fast implementation, unknown, but likely several days to weeks of discovery. The key question is whether the MT-CRT splits have a hidden sparse/structured basis. If they do, this becomes a new fast transform. If they do not, the transport optimum may be conceptually right but arithmetically too dense.
+
+That is the central risk.
+
+Bruun’s split is cheap because a node looks like:
+
+z^m - 2 cos(theta) z^(m/2) + 1
+
+and it splits into two similar trinomials. That gives linear-time local folds.
+
+MT-CRT’s top split for N=512 is more like:
+
+middle frequency band
+versus everything else
+
+The corresponding polynomial factors are products of many quadratics. In a naive coefficient basis, those are dense. Dense CRT projection would kill speed unless we find the right trace-orthonormal/band basis.
+
+So the minimal viable experiment is not “optimize it.” It is:
+
+1. Generate MT-CRT tree.
+2. Generate trace-orthonormal bases per node.
+3. Generate exact forward/inverse split matrices.
+4. Verify BᵀB = N I.
+5. Benchmark dense/generated implementation.
+6. Inspect split matrices for hidden sparsity/Toeplitz/Chebyshev/DCT structure.
+
+That last step is where the real discovery is. If the matrices reveal structure, we lower them into fast codelets. If they stay dense, then MT-CRT is the transport optimum but not the compute optimum.
+
+My honest estimate: we can get a slow but real MT-CRT transform today. Getting it to challenge our normalized Bruun requires discovering the fast lowering of those transport-minimal splits. That is the unknown.
+
 That is the one to design.
 
 
