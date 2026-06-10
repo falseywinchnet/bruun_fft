@@ -1374,6 +1374,32 @@ private:
         }
     }
 
+    void multiply_residues(
+        const double* RESTRICT A,
+        const double* RESTRICT B,
+        double* RESTRICT Y
+    ) const {
+        // Slot 0 is the z^2 = +1 quotient, jointly holding DC/Nyquist.
+        {
+            const double a0 = A[0], a1 = A[1];
+            const double b0 = B[0], b1 = B[1];
+    
+            Y[0] = a0*b0 + a1*b1;
+            Y[1] = a0*b1 + a1*b0;
+        }
+    
+        // All other slots satisfy e^2 = -1.
+        for (int m = 1; m < N / 2; ++m) {
+            const double a0 = A[2*m];
+            const double a1 = A[2*m + 1];
+            const double b0 = B[2*m];
+            const double b1 = B[2*m + 1];
+    
+            Y[2*m]     = a0*b0 - a1*b1;
+            Y[2*m + 1] = a0*b1 + a1*b0;
+        }
+    }
+
     void inverse_residues_inplace(double* RESTRICT v) const {
         for (int jj = L - 2; jj >= 0; --jj) {
             const int s = N >> jj;
