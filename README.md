@@ -4,6 +4,7 @@ bruun's fft algorithm for c and python https://en.wikipedia.org/wiki/Bruun%27s_F
 * you are not alone
 * I am collecting information and seeking implementations that can be helpful to convert
 * I am looking for anything in fortran or matlab if you have it
+* update: on wednesday, june 10, 2026, claude fable solved the problem in one round. with an ifft.
 
 # goals
 * implement bruun's fft in numpy
