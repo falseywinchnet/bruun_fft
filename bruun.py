@@ -1,3 +1,5 @@
+#  public domain (CC0), reference implementation by Claude Fable (Anthropic, 2026)
+# problem setup, request initiated by Joshuah Rainstar, subauthor
 """Bruun radix-2 RFFT for N = 512 and its exact inverse, staged in the layout
 of the unrolled Cooley-Tukey rfft: X_stage_j holds 2^j rows of length 512/2^j,
 and one precomputed REAL coefficient table per level plays the role of the
