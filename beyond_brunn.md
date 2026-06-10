@@ -268,6 +268,45 @@ real input
 
 All happens in realspace. none happens in complex space.
 
+bruun_fastplan_benchmark_standard.cpp
+
+Bruun transform itself is much faster.
+Standard FFT bin order costs a full permutation pass.
+Even after that pass, Bruun is still faster.
+If the downstream operation can stay in Bruun order, the permutation tax disappears.
+
+Filtering is the perfect case. A convolution/filtering pipeline can be:
+
+input -> Bruun native spectrum
+filter -> Bruun native spectrum, precomputed once
+pointwise multiply in Bruun order
+inverse
+
+No standard bin order needed in the hot path.
+
+note: sink is just a random val used to make sure things return
+err is bruun to fftw, rt is round trip
+
+       N    iters     FFTW_ns   Native_ns      Std_ns      N/F      S/F  checks
+     512    39062       713.0       420.3       530.4    0.589    0.744  err 1.9e-14 rt 6.7e-16 sink 65824.142
+    1024    17578      1227.8       865.9      1039.4    0.705    0.847  err 3.7e-14 rt 7.8e-16 sink -5468.4407
+    2048     7990      2598.3      1899.2      2284.6    0.731    0.879  err 1.2e-13 rt 8.9e-16 sink 14144.015
+    4096     3662      7062.4      3991.2      5657.4    0.565    0.801  err 2.7e-13 rt 8.9e-16 sink 3350.7713
+    8192     1690     14654.4     10851.1     13591.5    0.740    0.927  err 6.6e-13 rt 8.9e-16 sink 4629.461
+   16384      784     38772.7     23404.3     34286.4    0.604    0.884  err 1.6e-12 rt 1.1e-15 sink 5185.7736
+   32768      366    140854.4     46239.8     94665.9    0.328    0.672  err 7.1e-12 rt 1.1e-15 sink 1821.2476
+   65536      171    289400.3     97985.4    198457.1    0.339    0.686  err 3.1e-11 rt 1.2e-15 sink -2434.4398
+  131072       80    586522.4    216257.8    432775.0    0.369    0.738  err 6.4e-11 rt 1.1e-15 sink -876.38164
+  262144       38   1249189.7    461496.7    884805.9    0.369    0.708  err 1.6e-10 rt 1.4e-15 sink 1037.4371
+  524288       18   3719287.1   1061650.4   1969548.6    0.285    0.530  err 5.0e-10 rt 1.4e-15 sink 1943.0637
+ 1048576       16   5568333.4   2339651.1   4224322.9    0.420    0.759  err 2.6e-09 rt 1.4e-15 sink 2260.0734
+ 2097152       16  15123197.9   5356031.2   9845861.9    0.354    0.651  err 5.8e-09 rt 1.6e-15 sink -157.32364
+ 4194304       16  32056914.1  10711273.4  21024421.9    0.334    0.656  err 1.2e-08 rt 1.6e-15 sink -1799.7265
+ 8388608       16  67964679.7  24610052.1  45509359.4    0.362    0.670  err 5.5e-08 rt 1.7e-15 sink -7513.5165
+16777216       16 149024489.6  48852486.9  91471885.4    0.328    0.614  err 1.8e-07 rt 1.8e-15 sink 9833.6094
+33554432       16 324168343.8 107310903.6 187875562.5    0.331    0.580  err 5.3e-07 rt 1.8e-15 sink 14054.638
+67108864       16 726628489.6 235320187.5 437079622.4    0.324    0.602  err 7.1e-07 rt 1.8e-15 sink -30098.821
+
 
 My intention beyond this point is to develop an optimal FFT using an optimal CRT -see the conversation traces ChatGPT-Model Intelligence in DSP.md
 
