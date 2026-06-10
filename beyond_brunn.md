@@ -287,6 +287,8 @@ No standard bin order needed in the hot path.
 note: sink is just a random val used to make sure things return
 err is bruun to fftw, rt is round trip
 
+```text
+
        N    iters     FFTW_ns   Native_ns      Std_ns      N/F      S/F  checks
      512    39062       713.0       420.3       530.4    0.589    0.744  err 1.9e-14 rt 6.7e-16 sink 65824.142
     1024    17578      1227.8       865.9      1039.4    0.705    0.847  err 3.7e-14 rt 7.8e-16 sink -5468.4407
@@ -307,6 +309,7 @@ err is bruun to fftw, rt is round trip
     33554432       16 324168343.8 107310903.6 187875562.5    0.331    0.580  err 5.3e-07 rt 1.8e-15 sink 14054.638
     67108864       16 726628489.6 235320187.5 437079622.4    0.324    0.602  err 7.1e-07 rt 1.8e-15 sink -30098.821
 
+```
 
 My intention beyond this point is to develop an optimal FFT using an optimal CRT -see the conversation traces ChatGPT-Model Intelligence in DSP.md
 
