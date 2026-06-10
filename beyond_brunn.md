@@ -257,9 +257,18 @@ inverse fusion
 convolution API in normalized Bruun residues
 GPU/shared-memory experiments
 ```
+A less than obvious way to use bruun more optimally is to call forward to residue->
+use a residue-converted filter diagonal/pointwise in frequency: convolution, fixed FIR filtering by FFT, spectral gain/EQ, power spectrum, Wiener-like filters, deconvolution with precomputed inverse response, etc. 
 
+real input
+-> real Bruun transform
+-> real-pair spectral multiply
+-> real Bruun inverse
+-> real output
 
-## 14. The Mission in One Sentence
+All happens in realspace. none happens in complex space.
+
+## 14. Bruun in One Sentence
 
 A forgotten FFT approach that was a mere curiosity to a handful of mathematicians was rebuilt as a CRT transform, given an exact inverse, re-indexed through one coefficient ladder, moved into a normalized local-complex basis, reorganized around cache and output policy, and brought into direct competition with FFTW in a single-file implementation.
 
